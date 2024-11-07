@@ -2,23 +2,46 @@
 <html lang="en">
   
 <head>
+    <base href="/">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NASA Image Search</title>
+  <meta name="Description" content="Demonstration for hax-search">
+  
   <style>
-    :root, html, body {
-      margin: 0;
-      padding: 0;
-    }
+   :root {
+     --global-hex-color: #fd0606;
+   }
+   html, body {
+    margin: 0;
+    padding: 0;
+   }
+   #demo {
+    margin: var(--ddd-spacing-2)
+   }
 
-    nasa-search {
-      margin: 20px;
-      display: block;
-      background-color: var(--ddd-accent-2);
-      color: var(--ddd-primary-17);
+    hax-search {
+      margin: var(--ddd-spacing-2);
+      border: var(--ddd-border-md);
+      border-radius: var(--ddd-radius-lg);
+    }
+    hax-search:hover {
+        box-shadow: var(--ddd-boxShadow-sm);
+    }
+    #example {
+        --hax-search-font-size: var(--ddd-font-size-l);
+        background-color: var(--ddd-accent-2);
+        color: var(--ddd-primary-17);
     }
  </style>
-
+ <title>hax-search</title>
 </head>
 
 <body>
+    <div id="demo">
+        <h1>hax-json-search</h1>
+        <h2>Type your json below!</h2>
+        <json-analyzer></json-analyzer>
+
+    </div>
+    <script type="module" src="./json.analyzer.js"></script>
+    </html>
