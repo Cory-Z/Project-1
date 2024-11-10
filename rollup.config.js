@@ -1,43 +1,32 @@
-import nodeResolve from '@rollup/plugin-node-resolve';
-import babel from '@rollup/plugin-babel';
-import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
-import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
-import esbuild from 'rollup-plugin-esbuild';
-import commonjs from '@rollup/plugin-commonjs'; // Added to handle potential commonjs dependencies
+import esbuild from '@rollup/plugin-esbuild';
 
 export default {
-  input: 'index.html', // Entry point for the application
+  input: 'index.html',
   output: {
-    entryFileNames: '[hash].js', // Unique hashed file names for cache busting
+    entryFileNames: '[hash].js',
     chunkFileNames: '[hash].js',
     assetFileNames: '[hash][extname]',
-    format: 'es', // ES module format for modern browsers
-    dir: 'public', // Output directory for the build files
+    format: 'es',
+    dir: 'public',
   },
-  preserveEntrySignatures: false, // Ensure compatibility with dynamic imports
-
+  preserveEntrySignatures: false,
   plugins: [
-    /** Enable using HTML as Rollup entrypoint */
+
     html({
-      minify: true, // Minify HTML for production
+      minify: true,
     }),
-    /** Resolve bare module imports (node_modules) */
-    nodeResolve({
-      browser: true, // Ensure browser-compatible modules are resolved
-      dedupe: ['lit'], // Prevent duplicate instances of `lit`
-    }),
-    /** Handle potential CommonJS dependencies */
+    nodeResolve(),
     commonjs(),
-    /** Minify and transpile JavaScript for target browsers */
+
     esbuild({
-      minify: true, // Minify JS for production
-      target: ['chrome64', 'firefox67', 'safari11.1'], // Target modern browser versions
+      minify: true,
+      target: 'es2017',
     }),
-    /** Bundle assets referenced via import.meta.url */
+
     importMetaAssets(),
-    /** Minify HTML and CSS in tagged template literals */
+
     babel({
-      babelHelpers: 'bundled',
+      
       plugins: [
         [
           'babel-plugin-template-html-minifier',
@@ -46,11 +35,11 @@ export default {
             failOnError: false,
             strictCSS: true,
             htmlMinifier: {
-              collapseWhitespace: true, // Minify whitespace
+              collapseWhitespace: true,
               conservativeCollapse: true,
               removeComments: true,
               caseSensitive: true,
-              minifyCSS: true, // Minify inline CSS
+              minifyCSS: true,
             },
           },
         ],

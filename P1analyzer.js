@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit";
-import "./card.js"; // Import the Project1Card component
+import "./project-1-card.js";
 
 export class Project1Analyzer extends LitElement {
   static get properties() {
@@ -80,7 +80,7 @@ export class Project1Analyzer extends LitElement {
   }
 
   async analyze() {
-    if (!this.url.trim()) {
+    if (!this.url) {
       this.error = true;
       return;
     }
