@@ -3,34 +3,41 @@ import babel from '@rollup/plugin-babel';
 import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
 import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
 import esbuild from 'rollup-plugin-esbuild';
+import commonjs from '@rollup/plugin-commonjs'; // Added to handle potential commonjs dependencies
 
 export default {
-  input: 'index.html',
+  input: 'index.html', // Entry point for the application
   output: {
-    entryFileNames: '[hash].js',
+    entryFileNames: '[hash].js', // Unique hashed file names for cache busting
     chunkFileNames: '[hash].js',
     assetFileNames: '[hash][extname]',
-    format: 'es',
-    dir: 'public',
+    format: 'es', // ES module format for modern browsers
+    dir: 'public', // Output directory for the build files
   },
-  preserveEntrySignatures: false,
+  preserveEntrySignatures: false, // Ensure compatibility with dynamic imports
 
   plugins: [
-    /** Enable using HTML as rollup entrypoint */
+    /** Enable using HTML as Rollup entrypoint */
     html({
-      minify: true,
+      minify: true, // Minify HTML for production
     }),
-    /** Resolve bare module imports */
-    nodeResolve(),
-    /** Minify JS, compile JS to a lower language target */
+    /** Resolve bare module imports (node_modules) */
+    nodeResolve({
+      browser: true, // Ensure browser-compatible modules are resolved
+      dedupe: ['lit'], // Prevent duplicate instances of `lit`
+    }),
+    /** Handle potential CommonJS dependencies */
+    commonjs(),
+    /** Minify and transpile JavaScript for target browsers */
     esbuild({
-      minify: true,
-      target: ['chrome64', 'firefox67', 'safari11.1'],
+      minify: true, // Minify JS for production
+      target: ['chrome64', 'firefox67', 'safari11.1'], // Target modern browser versions
     }),
-    /** Bundle assets references via import.meta.url */
+    /** Bundle assets referenced via import.meta.url */
     importMetaAssets(),
-    /** Minify html and css tagged template literals */
+    /** Minify HTML and CSS in tagged template literals */
     babel({
+      babelHelpers: 'bundled',
       plugins: [
         [
           'babel-plugin-template-html-minifier',
@@ -39,11 +46,11 @@ export default {
             failOnError: false,
             strictCSS: true,
             htmlMinifier: {
-              collapseWhitespace: true,
+              collapseWhitespace: true, // Minify whitespace
               conservativeCollapse: true,
               removeComments: true,
               caseSensitive: true,
-              minifyCSS: true,
+              minifyCSS: true, // Minify inline CSS
             },
           },
         ],
