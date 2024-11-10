@@ -1,13 +1,27 @@
 {
   "name": "project-1",
   "version": "1.0.0",
-  "main": "card.js",
-
+  "description": "Project 1 - A Lit-based web component project with Rollup.js",
+  "main": "project-1-analyzer.js",
   "scripts": {
+    "start": "npx servor public index.html --reload", 
+    "build": "rollup -c", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@babel/core": "^7.22.0",
+    "babel-plugin-template-html-minifier": "^2.0.0",
+    "@web/rollup-plugin-html": "^2.6.0",
+    "@web/rollup-plugin-import-meta-assets": "^2.0.0",
+    "rollup": "^3.25.0",
+    "rollup-plugin-esbuild": "^4.10.0"
+  },
+  "dependencies": {
+    "lit": "^2.6.1"
+  }
 }
 

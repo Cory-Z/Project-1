@@ -1,28 +1,34 @@
-// import { hmrPlugin, presets } from '@open-wc/dev-server-hmr';
-
-/** Use Hot Module replacement by adding --hmr to the start command */
+/** Use Hot Module Replacement by adding --hmr to the start command */
 const hmr = process.argv.includes('--hmr');
 
 export default /** @type {import('@web/dev-server').DevServerConfig} */ ({
-  open: '/',
-  watch: !hmr,
-  https: true,
-  dedupe: true,
+  open: '/', // Automatically open the browser at the root
+  watch: !hmr, // Enable or disable file watching based on HMR flag
+  https: false, // Change to true if you need HTTPS locally
+  dedupe: true, // Prevent duplicate versions of dependencies like 'lit'
+
   /** Resolve bare module imports */
   nodeResolve: {
-    exportConditions: ['browser', 'development'],
+    exportConditions: ['browser', 'development'], // Resolve modern browser-compatible code
   },
+
   
-  /** Compile JS for older browsers. Requires @web/dev-server-esbuild plugin */
-  // esbuildTarget: 'auto'
-
   /** Set appIndex to enable SPA routing */
-  // appIndex: 'demo/index.html',
+  appIndex: 'public/index.html', // Specify the index file for SPA routing
 
+  /** Plugins */
   plugins: [
-    /** Use Hot Module Replacement by uncommenting. Requires @open-wc/dev-server-hmr plugin */
-    // hmr && hmrPlugin({ exclude: ['**/*/node_modules/**/*'], presets: [presets.litElement] }),
-  ],
+    /** Enable Hot Module Replacement if --hmr flag is used */
+    hmr && hmrPlugin({
+      exclude: ['**/*/node_modules/**/*'], // Exclude dependencies from HMR
+      presets: [presets.litElement], // Apply HMR specifically for LitElement
+    }),
+  ].filter(Boolean), // Filter out null values if HMR is not enabled
 
-  // See documentation for all available options
+  /** Optional: Uncomment and configure esbuild for compatibility with older browsers */
+  // esbuildTarget: 'auto', // Auto-detect and compile for older browser support
+
+  /** Other Options */
+  watchServe: true, // Reload the browser on file changes
+  rootDir: './', // Serve files relative to the project root
 });
