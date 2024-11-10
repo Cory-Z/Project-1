@@ -4,9 +4,8 @@
   "description": "Project 1 - A Lit-based web component project with Rollup.js",
   "main": "project-1-analyzer.js",
   "scripts": {
-    "start": "npx servor public index.html --reload",
-    "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "start": "npx servor public index.html --reload",
+  "build": "rollup -c"
   },
   "author": "",
   "license": "ISC",

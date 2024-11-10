@@ -1,32 +1,32 @@
-import esbuild from '@rollup/plugin-esbuild';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import html from '@web/rollup-plugin-html';
+import importMetaAssets from '@web/rollup-plugin-import-meta-assets';
+import babel from '@rollup/plugin-babel';
+import esbuild from 'rollup-plugin-esbuild';
 
 export default {
-  input: 'index.html',
+  input: 'P1analyzer.js', // Entry point for your project
   output: {
-    entryFileNames: '[hash].js',
-    chunkFileNames: '[hash].js',
-    assetFileNames: '[hash][extname]',
-    format: 'es',
-    dir: 'public',
+    file: 'public/bundle.js', // Output the bundle to public/bundle.js
+    format: 'es', // Use ES module format
+    sourcemap: true, // Enable sourcemap for debugging
   },
-  preserveEntrySignatures: false,
+  
   plugins: [
-
-    html({
-      minify: true,
-    }),
-    nodeResolve(),
-    commonjs(),
-
+    nodeResolve(), // Resolve bare module imports
+    commonjs(), // Convert CommonJS modules to ES modules
     esbuild({
-      minify: true,
-      target: 'es2017',
+      minify: true, // Minify the output
+      target: 'es2017', // Target modern JavaScript syntax
     }),
-
-    importMetaAssets(),
-
+    html({
+      input: 'public/index.html', // Specify your HTML entry point
+      minify: true, // Minify the HTML
+    }),
+    importMetaAssets(), // Handle assets referenced via import.meta
     babel({
-      
+      babelHelpers: 'bundled',
       plugins: [
         [
           'babel-plugin-template-html-minifier',
