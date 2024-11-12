@@ -6,7 +6,6 @@ export class Project1Card extends LitElement {
       title: { type: String },
       description: { type: String },
       image: { type: String },
-      lastUpdated: { type: String },
       contentUrl: { type: String },
       sourceUrl: { type: String },
     };
@@ -27,7 +26,7 @@ export class Project1Card extends LitElement {
 
       img {
         width: 100%;
-        height: 120px;
+        height: 150px;
         object-fit: cover;
         border-radius: 4px;
         margin-bottom: 8px;
@@ -36,6 +35,7 @@ export class Project1Card extends LitElement {
       h4 {
         margin: 0 0 8px 0;
         font-size: 16px;
+        color: #333;
       }
 
       p {
@@ -63,12 +63,11 @@ export class Project1Card extends LitElement {
       <div>
         ${this.image
           ? html`<img src="${this.image}" alt="${this.title}" />`
-          : null}
+          : html`<div style="height: 150px; background-color: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center;">No Image</div>`}
         <h4>${this.title}</h4>
         <p>${this.description}</p>
-        <p>Last Updated: ${this.lastUpdated}</p>
-        <a href="${this.contentUrl}" target="_blank">Open Content</a>
-        <a href="${this.sourceUrl}" target="_blank">Open Source</a>
+        <a href="${this.contentUrl}" target="_blank">View Full Image</a>
+        <a href="${this.sourceUrl}" target="_blank">Download</a>
       </div>
     `;
   }
