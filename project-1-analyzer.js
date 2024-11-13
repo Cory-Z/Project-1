@@ -1,11 +1,14 @@
 import { LitElement, html, css } from "lit";
 import "./project-1-card.js";
+import "@haxtheweb/simple-icon/simple-icon.js";
+import "@haxtheweb/simple-icon/lib/simple-icons.js";
 
 export class Project1Analyzer extends LitElement {
   static get properties() {
     return {
       query: { type: String },
       items: { type: Array },
+      metadata: { type: Object },
       loading: { type: Boolean },
       error: { type: Boolean },
     };
@@ -45,6 +48,22 @@ export class Project1Analyzer extends LitElement {
         background-color: #005fa3;
       }
 
+      .overview {
+        background: #f9f9f9;
+        padding: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+
+      .overview h3 {
+        margin: 0 0 8px 0;
+      }
+
+      .overview p {
+        margin: 4px 0;
+      }
+
       .cards {
         display: flex;
         flex-wrap: wrap;
@@ -57,27 +76,33 @@ export class Project1Analyzer extends LitElement {
     super();
     this.query = "";
     this.items = [];
+    this.metadata = null;
     this.loading = false;
     this.error = false;
   }
 
-  async fetchImages(query) {
+  async fetchData(query) {
     this.loading = true;
     this.error = false;
 
     try {
-      // Using Lorem Picsum for demonstration (random images)
-      const response = await fetch(`https://picsum.photos/v2/list?limit=12`);
+      const normalizedUrl = query.endsWith("site.json")
+        ? query
+        : `${query}/site.json`;
+
+      const response = await fetch(normalizedUrl);
+      if (!response.ok) throw new Error("Failed to fetch site.json");
+
       const data = await response.json();
-      this.items = data.map((item) => ({
-        title: `Car ${item.id}`,
-        description: "A random car image",
-        image: item.download_url,
-        contentUrl: item.url,
-        sourceUrl: item.download_url,
-      }));
+
+      if (!data.metadata || !Array.isArray(data.items)) {
+        throw new Error("Invalid site.json format");
+      }
+
+      this.metadata = data.metadata;
+      this.items = data.items;
     } catch (error) {
-      console.error("Error fetching images:", error);
+      console.error("Error fetching data:", error);
       this.error = true;
     } finally {
       this.loading = false;
@@ -89,7 +114,24 @@ export class Project1Analyzer extends LitElement {
       this.error = true;
       return;
     }
-    this.fetchImages(this.query);
+    this.fetchData(this.query);
+  }
+
+  renderOverview() {
+    if (!this.metadata) return null;
+
+    return html`
+      <div class="overview">
+        <h3>${this.metadata.name || "Untitled Site"}</h3>
+        <p>Description: ${this.metadata.description || "No description available."}</p>
+        <p>
+          <simple-icon icon="icons:link"></simple-icon>
+          Theme: ${this.metadata.theme || "N/A"}
+        </p>
+        <p>Created: ${this.metadata.created || "N/A"}</p>
+        <p>Last Updated: ${this.metadata.updated || "N/A"}</p>
+      </div>
+    `;
   }
 
   renderCards() {
@@ -100,11 +142,12 @@ export class Project1Analyzer extends LitElement {
         ${this.items.map(
           (item) => html`
             <project-1-card
-              .title="${item.title}"
-              .description="${item.description}"
-              .image="${item.image}"
-              .contentUrl="${item.contentUrl}"
-              .sourceUrl="${item.sourceUrl}"
+              .title="${item.title || "Untitled"}"
+              .description="${item.description || "No description"}"
+              .image="${item.image || ""}"
+              .lastUpdated="${item.updated || "N/A"}"
+              .contentUrl="${item.url || "#"}"
+              .sourceUrl="${item.sourceUrl || "#"}"
             ></project-1-card>
           `
         )}
@@ -117,17 +160,20 @@ export class Project1Analyzer extends LitElement {
       <div class="input-container">
         <input
           type="text"
-          placeholder="Type 'cars' or any query (mock data)"
+          placeholder="Enter site location"
           @input="${(e) => (this.query = e.target.value)}"
         />
-        <button @click="${this.handleSearch}">Search</button>
+        <button @click="${this.handleSearch}">Analyze</button>
       </div>
 
-      ${this.error ? html`<p style="color: red;">Error fetching images.</p>` : null}
+      ${this.error
+        ? html`<p style="color: red;">Error fetching or processing the site.json.</p>`
+        : null}
 
-      ${this.loading ? html`<p>Loading...</p>` : this.renderCards()}
+      ${this.renderOverview()}
+      ${this.renderCards()}
     `;
   }
 }
 
-customElements.define('project-1-analyzer', Project1Analyzer);
+customElements.define("project-1-analyzer", Project1Analyzer);
