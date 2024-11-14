@@ -137,10 +137,10 @@ export class Project1Analyzer extends LitElement {
     return html`
       <div class="cards">
         ${this.items.map((item) => {
-          const contentUrl = item.url ? new URL(item.url, this.query).href : "#";
-          const sourceUrl = item.sourceUrl
-            ? new URL(item.sourceUrl, this.query).href
-            : "#";
+          // Use https://haxtheweb.org/ as the base URL for content and source links
+          const baseUrl = "https://haxtheweb.org/";
+          const contentUrl = item.url ? new URL(item.url, baseUrl).href : baseUrl;
+          const sourceUrl = item.sourceUrl ? new URL(item.sourceUrl, baseUrl).href : baseUrl;
   
           return html`
             <project-1-card
@@ -156,7 +156,7 @@ export class Project1Analyzer extends LitElement {
       </div>
     `;
   }
-
+  
   render() {
     return html`
       <div class="input-container">
