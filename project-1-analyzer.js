@@ -94,7 +94,7 @@ export class Project1Analyzer extends LitElement {
       if (!data.metadata || !Array.isArray(data.items)) {
         throw new Error("Invalid site.json format");
       }
-      
+
       this.metadata = data.metadata;
       this.items = data.items;
     } catch (error) {
@@ -133,11 +133,14 @@ export class Project1Analyzer extends LitElement {
 
   renderCards() {
     if (!this.items || this.items.length === 0) return html`<p>No results found.</p>`;
-
+  
     return html`
       <div class="cards">
         ${this.items.map((item) => {
-          const contentUrl = item.url ? new URL(item.url, this.query).href : "#";
+          // Construct full URLs for content and source links
+          const contentUrl = item.url
+            ? new URL(item.url, this.query).href
+            : "#";
           const sourceUrl = item.sourceUrl
             ? new URL(item.sourceUrl, this.query).href
             : "#";
@@ -154,7 +157,7 @@ export class Project1Analyzer extends LitElement {
         })}
       </div>
     `;
-}
+  }
 
   render() {
     return html`
