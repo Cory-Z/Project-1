@@ -137,13 +137,11 @@ export class Project1Analyzer extends LitElement {
     return html`
       <div class="cards">
         ${this.items.map((item) => {
-          // Construct full URLs for content and source links
-          const contentUrl = item.url
-            ? new URL(item.url, this.query).href
-            : "#";
+          const contentUrl = item.url ? new URL(item.url, this.query).href : "#";
           const sourceUrl = item.sourceUrl
             ? new URL(item.sourceUrl, this.query).href
             : "#";
+  
           return html`
             <project-1-card
               .title="${item.title || "Untitled"}"

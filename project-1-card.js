@@ -12,6 +12,16 @@ export class Project1Card extends LitElement {
     };
   }
 
+  constructor() {
+    super();
+    this.title = "";
+    this.description = "";
+    this.image = "";
+    this.lastUpdated = "";
+    this.contentUrl = "";
+    this.sourceUrl = "";
+  }
+
   static get styles() {
     return css`
       :host {
@@ -23,6 +33,7 @@ export class Project1Card extends LitElement {
         width: 100%;
         max-width: 240px;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
       }
 
       img {
@@ -45,32 +56,44 @@ export class Project1Card extends LitElement {
         color: #555;
       }
 
-      a {
-        display: block;
+      button {
+        padding: 8px 12px;
+        margin: 4px;
         font-size: 14px;
-        color: #007acc;
-        text-decoration: none;
-        margin-top: 4px;
+        background-color: #007acc;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
       }
 
-      a:hover {
-        text-decoration: underline;
+      button:hover {
+        background-color: #005fa3;
       }
     `;
+  }
+
+  openContent() {
+    if (this.contentUrl) {
+      window.open(this.contentUrl, "_blank");
+    }
+  }
+
+  openSource() {
+    if (this.sourceUrl) {
+      window.open(this.sourceUrl, "_blank");
+    }
   }
 
   render() {
     return html`
       <div>
-        ${this.image
-          ? html`<img src="${this.image}" alt="${this.title}" />`
-          : null}
+        ${this.image ? html`<img src="${this.image}" alt="${this.title}" />` : null}
         <h4>${this.title}</h4>
         <p>${this.description}</p>
         <p>Last Updated: ${this.lastUpdated}</p>
-        <!-- Ensure target="_blank" and rel="noopener noreferrer" -->
-        <a href="${this.contentUrl}" target="_blank" rel="noopener noreferrer">Open Content</a>
-        <a href="${this.sourceUrl}" target="_blank" rel="noopener noreferrer">Open Source</a>
+        <button @click="${this.openContent}">Open Content</button>
+        <button @click="${this.openSource}">Open Source</button>
       </div>
     `;
   }
