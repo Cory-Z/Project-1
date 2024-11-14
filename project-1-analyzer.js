@@ -65,10 +65,10 @@ export class Project1Analyzer extends LitElement {
       }
 
       .cards {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
     `;
   }
 
@@ -86,11 +86,7 @@ export class Project1Analyzer extends LitElement {
     this.error = false;
 
     try {
-      const normalizedUrl = query.endsWith("site.json")
-        ? query
-        : `${query}/site.json`;
-
-      const response = await fetch(normalizedUrl);
+      const response = await fetch(query);
       if (!response.ok) throw new Error("Failed to fetch site.json");
 
       const data = await response.json();
@@ -98,7 +94,7 @@ export class Project1Analyzer extends LitElement {
       if (!data.metadata || !Array.isArray(data.items)) {
         throw new Error("Invalid site.json format");
       }
-
+      
       this.metadata = data.metadata;
       this.items = data.items;
     } catch (error) {
@@ -109,13 +105,14 @@ export class Project1Analyzer extends LitElement {
     }
   }
 
+
   handleSearch() {
-    if (!this.query) {
-      this.error = true;
-      return;
+    if (!this.query || !this.query.startsWith("http")) {
+        this.error = true;
+        return;
     }
     this.fetchData(this.query);
-  }
+}
 
   renderOverview() {
     if (!this.metadata) return null;
@@ -139,21 +136,25 @@ export class Project1Analyzer extends LitElement {
 
     return html`
       <div class="cards">
-        ${this.items.map(
-          (item) => html`
+        ${this.items.map((item) => {
+          const contentUrl = item.url ? new URL(item.url, this.query).href : "#";
+          const sourceUrl = item.sourceUrl
+            ? new URL(item.sourceUrl, this.query).href
+            : "#";
+          return html`
             <project-1-card
               .title="${item.title || "Untitled"}"
               .description="${item.description || "No description"}"
               .image="${item.image || ""}"
               .lastUpdated="${item.updated || "N/A"}"
-              .contentUrl="${item.url || "#"}"
-              .sourceUrl="${item.sourceUrl || "#"}"
+              .contentUrl="${contentUrl}"
+              .sourceUrl="${sourceUrl}"
             ></project-1-card>
-          `
-        )}
+          `;
+        })}
       </div>
     `;
-  }
+}
 
   render() {
     return html`

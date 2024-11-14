@@ -68,11 +68,11 @@ export class Project1Card extends LitElement {
         <h4>${this.title}</h4>
         <p>${this.description}</p>
         <p>Last Updated: ${this.lastUpdated}</p>
-        <a href="${this.contentUrl}" target="_blank">Open Content</a>
-        <a href="${this.sourceUrl}" target="_blank">Open Source</a>
+        <a href="${this.contentUrl}" target="_blank" rel="noopener noreferrer">Open Content</a>
+        <a href="${this.sourceUrl}" target="_blank" rel="noopener noreferrer">Open Source</a>
       </div>
     `;
-  }
+}
 }
 
 customElements.define("project-1-card", Project1Card);
