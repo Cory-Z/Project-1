@@ -102,6 +102,7 @@ export class Project1Zavod extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   renderCards() {
+
     if (!this.items || this.items.length === 0) {
       return html`<p>No data to display.</p>`;
     }
